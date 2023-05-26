@@ -1,48 +1,67 @@
 package ru.doctorixx.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.jetbrains.annotations.NotNull;
 import ru.doctorixx.api.structures.APIRequest;
+import ru.doctorixx.api.structures.ApiResponse;
 import ru.doctorixx.core.ExecutionManager;
 import ru.doctorixx.core.RunManager;
 import ru.doctorixx.core.executors.PythonExecutor;
 import ru.doctorixx.core.structures.ProgramResult;
-import ru.doctorixx.core.structures.Test;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class APIHandler implements Handler {
+
+
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
     @Override
-    public void handle(@NotNull Context context) throws Exception {
+    public void handle(@NotNull Context context) {
+
         APIRequest request = context.bodyAsClass(APIRequest.class);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ExecutionManager executionManager = new ExecutionManager(new PythonExecutor("hello.py", "adir"), "", request.source());
-                RunManager runManager = new RunManager(executionManager);
+                try {
+                    ExecutionManager executionManager = new ExecutionManager(new PythonExecutor("hello.py", "adir"), "", request.source());
+                    RunManager runManager = new RunManager(executionManager);
 
-                List<Test> tests = new ArrayList<>();
+                    List<ProgramResult> results = runManager.test(request.tests());
+                    System.out.println();
 
-                tests.add(new Test("1\n1", "2"));
-                tests.add(new Test("10\n1", "11"));
-                tests.add(new Test("1\n1", "2"));
-                tests.add(new Test("1\n3", "4"));
-                tests.add(new Test("-1\n3", "2"));
-                tests.add(new Test("-2\n3", "1"));
-                tests.add(new Test("-3\n3", "0"));
+                    for (ProgramResult res : results) {
+                        System.out.println(res.msg() + " " + res.time() + "ms");
+                    }
 
 
-                List<ProgramResult> results = runManager.test(tests);
-                System.out.println();
+                    System.out.println(runManager.getSuccessTestCount() + "/" + runManager.getTestCount());
 
-                for (ProgramResult res : results) {
-                    System.out.println(res.msg() + " " + res.time() + "ms");
+                    OkHttpClient client = new OkHttpClient();
+
+                    ObjectMapper objectMapper = new ObjectMapper();
+
+                    ApiResponse response = new ApiResponse(results, request.meta());
+
+                    RequestBody requestBody = RequestBody.create(JSON, objectMapper.writeValueAsString(response));
+                    Request senderRequest = new Request.Builder()
+                            .url("http://127.0.0.1:5000")
+                            .post(requestBody)
+                            .build();
+
+                    client.newCall(senderRequest).execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                System.out.println(runManager.getSuccessTestCount() + "/" + runManager.getTestCount());
             }
         }).start();
 
