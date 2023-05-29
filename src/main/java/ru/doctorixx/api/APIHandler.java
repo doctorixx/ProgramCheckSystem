@@ -12,17 +12,29 @@ import ru.doctorixx.api.structures.APIRequest;
 import ru.doctorixx.api.structures.ApiResponse;
 import ru.doctorixx.core.ExecutionManager;
 import ru.doctorixx.core.RunManager;
+import ru.doctorixx.core.executors.CommandExecutor;
+import ru.doctorixx.core.executors.JavaExecutor;
+import ru.doctorixx.core.executors.KumirExecutor;
 import ru.doctorixx.core.executors.PythonExecutor;
 import ru.doctorixx.core.structures.ProgramResult;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Map;
 
 public class APIHandler implements Handler {
 
 
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+
+    public static final Map<String, CommandExecutor> executors = new HashMap<>();
+
+    static {
+        executors.put("python", new PythonExecutor("hello.py", "adir"));
+        executors.put("java", new JavaExecutor("Main.java", "adir"));
+        executors.put("kumir", new KumirExecutor("kumir.kum", "adir"));
+    }
 
     @Override
     public void handle(@NotNull Context context) {
@@ -33,7 +45,7 @@ public class APIHandler implements Handler {
             @Override
             public void run() {
                 try {
-                    ExecutionManager executionManager = new ExecutionManager(new PythonExecutor("hello.py", "adir"), "", request.source());
+                    ExecutionManager executionManager = new ExecutionManager(executors.get(request.compiler()), "", request.source());
                     RunManager runManager = new RunManager(executionManager);
 
                     List<ProgramResult> results = runManager.test(request.tests());
@@ -54,7 +66,7 @@ public class APIHandler implements Handler {
 
                     RequestBody requestBody = RequestBody.create(JSON, objectMapper.writeValueAsString(response));
                     Request senderRequest = new Request.Builder()
-                            .url("http://127.0.0.1:5000")
+                            .url("http://127.0.0.1:5000/api/check_system_callback")
                             .post(requestBody)
                             .build();
 

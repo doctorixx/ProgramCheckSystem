@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class CompileTest {
     public static void main(String[] args) throws IOException {
-        CommandExecutor executor = new PythonExecutor("hello.py", "C:\\Users\\jebpi\\IdeaProjects\\TestProject\\python");
+        CommandExecutor executor = new PythonExecutor("hello.py", "C:\\Users\\jebpi\\IdeaProjects\\TestProject\\progs");
 
         ProgramResult result = executor.execute("1\n2");
 

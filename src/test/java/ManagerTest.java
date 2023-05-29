@@ -11,7 +11,7 @@ public class ManagerTest {
     public static String PROGRAMM = "алг\nнач\nцел ц, а\nввод ц, а\nвывод ц + а\nкон\n";
 
     public static void main(String[] args) throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\jebpi\\IdeaProjects\\TestProject\\python\\main.kum"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\jebpi\\IdeaProjects\\TestProject\\progs\\main.kum"))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 

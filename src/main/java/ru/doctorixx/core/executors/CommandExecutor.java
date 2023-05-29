@@ -1,8 +1,8 @@
 package ru.doctorixx.core.executors;
 
+import ru.doctorixx.core.compilers.AbstractCompiler;
 import ru.doctorixx.core.structures.ProcessEndStatus;
 import ru.doctorixx.core.structures.ProgramResult;
-import ru.doctorixx.core.compilers.AbstractCompiler;
 import ru.doctorixx.core.utils.BufferUtils;
 import ru.doctorixx.core.utils.ProcessUtils;
 
@@ -69,6 +69,8 @@ public abstract class CommandExecutor {
 
         String line = BufferUtils.getOutput(stdout);
         String errStr = BufferUtils.getOutput(stderr);
+
+        pr.destroyForcibly();
 
         if (errStr.isEmpty() || errStr.isBlank()) {
             return new ProgramResult(true, line, ProcessEndStatus.SUCCESS, (int) runMillis);

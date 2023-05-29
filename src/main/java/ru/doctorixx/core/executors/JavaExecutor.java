@@ -26,10 +26,6 @@ public class JavaExecutor extends CommandExecutor {
             return "javac";
         }
 
-        @Override
-        public String filenameModifyAfterComplete(String in) {
-            return in.replace(".java", "");
-        }
-    }
 
+    }
 }
