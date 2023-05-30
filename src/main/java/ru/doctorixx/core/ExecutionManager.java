@@ -27,14 +27,12 @@ public class ExecutionManager {
         this.fileData = fileData;
     }
 
-    public ExecutionManager(CommandExecutor executor, String inputData, String fileData, Callback<ProgramResult> callback) {
-        this(executor, inputData, fileData);
-
-        this.callback = callback;
-    }
 
     synchronized static private int generateNewProgramId() {
         lastProgramId++;
+        if (lastProgramId + 5 >= Integer.MAX_VALUE) {
+            lastProgramId = 5;
+        }
         return lastProgramId;
     }
 
@@ -48,27 +46,35 @@ public class ExecutionManager {
             return execute(myId);
         } else {
             myId = generateNewProgramId();
+
+            ProgramResult result = execute(myId);
+
             hasNewId = true;
-            return execute(myId);
+            return result;
         }
 
     }
 
     private ProgramResult execute(int runId) {
 //        int runId = generateNewProgramId();
-        ProgramResult out = null;
+        ProgramResult out;
         File tempdir = new File(executeHomeDirectory + "\\" + runId);
         try {
 
-            tempdir.mkdir();
+            if (!hasNewId) {
+                tempdir.mkdir();
 
-            try (FileWriter writer = new FileWriter(new File(tempdir, executor.getFilename()))) {
-                writer.write(fileData);
-                writer.flush();
+
+                try (FileWriter writer = new FileWriter(new File(tempdir, executor.getFilename()))) {
+                    writer.write(fileData);
+                    writer.flush();
+                }
+
+
+                executor.setDirectory(tempdir.getAbsolutePath());
             }
 
 
-            executor.setDirectory(tempdir.getAbsolutePath());
             ProgramResult programResult = executor.execute(inputData);
 
             if (callback != null) {
@@ -82,6 +88,7 @@ public class ExecutionManager {
             throw new RuntimeException(e);
         } finally {
             FileUtils.recursiveDelete(tempdir);
+            tempdir.deleteOnExit();
         }
 
         return out;

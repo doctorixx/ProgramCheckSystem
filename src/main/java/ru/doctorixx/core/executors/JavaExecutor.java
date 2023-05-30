@@ -1,6 +1,7 @@
 package ru.doctorixx.core.executors;
 
 import ru.doctorixx.core.compilers.AbstractCompiler;
+import ru.doctorixx.core.compilers.EmptyCompiler;
 
 public class JavaExecutor extends CommandExecutor {
 
@@ -16,16 +17,7 @@ public class JavaExecutor extends CommandExecutor {
 
     @Override
     protected AbstractCompiler getCompiler() {
-        return new JavaCompiler();
+        return new EmptyCompiler();
     }
 
-    private static class JavaCompiler extends AbstractCompiler {
-
-        @Override
-        public String getCompileCommand() {
-            return "javac";
-        }
-
-
-    }
 }

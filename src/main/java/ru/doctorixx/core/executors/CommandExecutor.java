@@ -70,8 +70,6 @@ public abstract class CommandExecutor {
         String line = BufferUtils.getOutput(stdout);
         String errStr = BufferUtils.getOutput(stderr);
 
-        pr.destroyForcibly();
-
         if (errStr.isEmpty() || errStr.isBlank()) {
             return new ProgramResult(true, line, ProcessEndStatus.SUCCESS, (int) runMillis);
         } else {

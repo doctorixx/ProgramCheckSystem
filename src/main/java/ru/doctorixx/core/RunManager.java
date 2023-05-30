@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RunManager {
-    private ExecutionManager executionManager;
+    private final ExecutionManager executionManager;
 
     private final List<ProgramResult> programResults = new ArrayList<>();
 
@@ -23,7 +23,7 @@ public class RunManager {
 
         for (Test test : tests) {
             executionManager.setInputData(test.in());
-            ProgramResult result = executionManager.executeMany();
+            ProgramResult result = executionManager.executeOne();
 
 
             if (!result.success()) {
