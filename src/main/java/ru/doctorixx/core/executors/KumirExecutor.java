@@ -31,4 +31,11 @@ public class KumirExecutor extends CommandExecutor {
             return in.replace(".kum", ".kod");
         }
     }
+
+    @Override
+    public String mutateProgramBeforeRun(String program) {
+        program = program.replaceAll("\\r\\n", "\n");
+        program = program.replaceAll("\\r", "\n");
+        return program;
+    }
 }

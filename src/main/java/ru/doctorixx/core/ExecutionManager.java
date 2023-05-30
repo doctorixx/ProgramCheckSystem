@@ -14,7 +14,7 @@ public class ExecutionManager {
     private final CommandExecutor executor;
     private final File executeHomeDirectory;
     private String inputData;
-    private final String fileData;
+    private String fileData;
     private Callback<ProgramResult> callback;
 
     private boolean hasNewId;
@@ -64,6 +64,8 @@ public class ExecutionManager {
             if (!hasNewId) {
                 tempdir.mkdir();
 
+
+                fileData = executor.mutateProgramBeforeRun(fileData);
 
                 try (FileWriter writer = new FileWriter(new File(tempdir, executor.getFilename()))) {
                     writer.write(fileData);

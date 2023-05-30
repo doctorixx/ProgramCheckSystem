@@ -118,6 +118,10 @@ public abstract class CommandExecutor {
     public String getFilename() {
         return filename;
     }
+
+    public String mutateProgramBeforeRun(String program) {
+        return program;
+    }
 }
 
 
