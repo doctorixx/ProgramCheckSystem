@@ -33,7 +33,7 @@ HTTP API
 |-------|--------------------------------|----------------|----------------------------|
 | POST  | Content-Type: application/json | (ПРИМЕР ВНИЗУ) | SERVER_ADDRESS/api/v1/test |
 
-```
+```json
 {
   "source": "a = int(input())\nb = int(input())\nprint(a + b)",
   "meta": "2",
@@ -82,7 +82,7 @@ OK
 После прохождения всех тестов сервер отправит вердикт на указанный адрес
 
 Пример callback`а
-```
+```json
 {
   "results": [
     {
