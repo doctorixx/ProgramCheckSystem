@@ -33,7 +33,7 @@ HTTP API
 
 | Method | Headers                        | Body           | Address                     |
 |--------|--------------------------------|----------------|----------------------------|
-| POST   | Content-Type: application/json | (ПРИМЕР ВНИЗУ) | SERVER_ADDRESS/api/v1/test |
+| POST   | Content-Type: application/json | (EXAMPLE BELOW) | SERVER_ADDRESS/api/v1/test |
 
 ```json
 {
