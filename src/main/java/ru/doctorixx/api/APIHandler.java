@@ -15,8 +15,12 @@ import ru.doctorixx.core.RunManager;
 import ru.doctorixx.core.structures.ProgramResult;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class APIHandler implements Handler {
+
+    private static Logger log = Logger.getLogger(APIHandler.class.getName());
 
 
     public static final MediaType JSON
@@ -62,7 +66,7 @@ public class APIHandler implements Handler {
 
                     client.newCall(senderRequest).execute();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.log(Level.INFO, e.getMessage(), e);
                 }
             }
         }).start();
