@@ -1,7 +1,6 @@
 package ru.doctorixx.core;
 
 import ru.doctorixx.core.executors.CommandExecutor;
-import ru.doctorixx.core.structures.Callback;
 import ru.doctorixx.core.structures.ProgramResult;
 import ru.doctorixx.core.utils.FileUtils;
 
@@ -10,19 +9,17 @@ import java.io.FileWriter;
 
 public class ExecutionManager {
 
-    private static int lastProgramId = 0;
+    private static int lastProgramId;
     private final CommandExecutor executor;
     private final File executeHomeDirectory;
     private String inputData;
     private String fileData;
-    private Callback<ProgramResult> callback;
-
     private boolean hasNewId;
     private int myId;
 
     public ExecutionManager(CommandExecutor executor, String inputData, String fileData) {
         this.executor = executor;
-        executeHomeDirectory = new File(executor.getDirectory());
+        this.executeHomeDirectory = new File(executor.getDirectory());
         this.inputData = inputData;
         this.fileData = fileData;
     }
@@ -42,21 +39,14 @@ public class ExecutionManager {
 
 
     public ProgramResult executeMany() {
-        if (hasNewId) {
-            return execute(myId);
-        } else {
+        if (!hasNewId) {
             myId = generateNewProgramId();
-
-            ProgramResult result = execute(myId);
-
             hasNewId = true;
-            return result;
         }
-
+        return execute(myId);
     }
 
     private ProgramResult execute(int runId) {
-//        int runId = generateNewProgramId();
         ProgramResult out;
         File tempdir = new File(executeHomeDirectory + "\\" + runId);
         try {
@@ -77,13 +67,7 @@ public class ExecutionManager {
             }
 
 
-            ProgramResult programResult = executor.execute(inputData);
-
-            if (callback != null) {
-                callback.call(programResult);
-            }
-
-            out = programResult;
+            out = executor.execute(inputData);
 
 
         } catch (Exception e) {

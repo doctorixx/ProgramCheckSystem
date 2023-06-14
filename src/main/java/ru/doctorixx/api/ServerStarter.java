@@ -9,7 +9,7 @@ public class ServerStarter {
         File adir = new File("adir");
         adir.mkdir();
 
-        var app = Javalin.create(/*config*/)
+        Javalin.create(/*config*/)
                 .get("/", ctx -> ctx.result("Hello World"))
                 .post("/api/v1/test", new APIHandler())
                 .start(7070);

@@ -35,9 +35,6 @@ public abstract class CommandExecutor {
         command.add(mainCommand);
         command.add(filename);
 
-
-        // TODO: 22.05.2023 Fix hard path
-
         ProcessBuilder builder = new ProcessBuilder(command)
                 .directory(new File(directory));
         Process pr = builder.start();
