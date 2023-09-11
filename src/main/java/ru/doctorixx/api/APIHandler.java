@@ -8,6 +8,7 @@ import com.squareup.okhttp.RequestBody;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import org.jetbrains.annotations.NotNull;
+import ru.doctorixx.Env;
 import ru.doctorixx.api.structures.APIRequest;
 import ru.doctorixx.api.structures.ApiResponse;
 import ru.doctorixx.core.ExecutionManager;
@@ -60,7 +61,7 @@ public class APIHandler implements Handler {
 
                     RequestBody requestBody = RequestBody.create(JSON, objectMapper.writeValueAsString(response));
                     Request senderRequest = new Request.Builder()
-                            .url("http://127.0.0.1:5000/api/check_system_callback")
+                            .url(Env.get(Env.EnvVars.SERVER_ENDPOINT))
                             .post(requestBody)
                             .build();
 
