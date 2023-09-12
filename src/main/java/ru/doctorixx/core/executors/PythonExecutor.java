@@ -12,7 +12,7 @@ public class PythonExecutor extends CommandExecutor {
 
     @Override
     protected String getRunCommand() {
-        return "python";
+        return "python3";
     }
 
     @Override
